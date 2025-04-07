@@ -1,15 +1,14 @@
 from OlfSerial import OlfSerial
 class Olfactometer(OlfSerial):
-    def __init__(self, aromas, boards = None, use = True):
+    def __init__(self, aromas, boards, port, use = True):
         """
         Initialize the Olfactometer class
         """
+        super().__init__(port=port)
         self.good_smell = aromas[0]
         self.bad_smell = aromas[1]
         self.use = use
-        super().__init__(port="/dev/tty.usbserial-FTWGRT8X")
-        if boards:
-            self.set_boards(boards)
+        self.set_boards(boards)
 
     def activate(self, aroma):
         self.print_aroma(aroma)

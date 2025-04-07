@@ -44,7 +44,7 @@ class OlfSerial(serial.Serial):
 
     """
 
-    BOARDS = ["0D02C01E", "0D02B016", "0D02B015", "0D02B01E", "0D02C019"]
+    BOARDS = ["0D02B024", "0D02B014"]
 
     def __init__(self, port="/dev/ttyUSB0", baudrate=57600, bytesize=serial.EIGHTBITS, timeout=None, **kwargs):
         """Create connection to the solenodrive"""
