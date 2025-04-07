@@ -1,0 +1,12 @@
+pre_block : 1
+n_blocks :  1
+n_concentrations : 5
+n_aromas : 2
+odor_exposure : 1
+recovery : 0
+vote : 0
+after_block_rest : 0
+final_recovery_min : 0
+final_recovery_max : 1
+sleep : True
+use : True
