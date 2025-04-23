@@ -1,29 +1,7 @@
 import time
 import threading
-import explorepy
-from explorepy import core
-from pylsl import StreamInlet, resolve_stream
 import csv
-from pylsl import StreamInfo, StreamOutlet
 
-# Function to save EEG data to a list
-eeg_data_list = []
-
-def on_eeg_sample(packet):
-    # packet is an ExplorePacket with EEG data
-    data = packet.get_data()
-    timestamp = packet.get_timestamp()
-    eeg_data_list.append([timestamp] + data.tolist())
-
-# Setup ExplorePy EEG stream
-# def start_explore_eeg():
-    # explore = core.Explore()
-    # explore.connect(device_name='Explore_XXXX')  # Replace with your device name
-    # explore.set_eeg_handler(on_eeg_sample)
-    # explore.start_acquisition()
-
-# Setup fNIRS stream (assuming Aurora sends LSL data)
-fnirs_data_list = []
 
 def start_fnirs_recording():
     print("Resolving fNIRS stream...")
@@ -35,20 +13,10 @@ def start_fnirs_recording():
         # fnirs_data_list.append([timestamp] + sample)
         time.sleep(0.01)
 
-def start_triggers_recording():
-    triggers_data_list = []
-
-    print("Resolving triggers stream...")
-    streams = resolve_stream('name', 'TriggerStream')
-    inlet = StreamInlet(streams[0])
-
-    while True:
-        sample, timestamp = inlet.pull_sample()
-        triggers_data_list.append([timestamp] + sample)
-        time.sleep(0.01)
-
 # Save data to CSV
 def save_data():
+    eeg_data_list = []
+    fnirs_data_list = []
     with open('eeg_data.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['Timestamp'] + [f'EEG_{i}' for i in range(len(eeg_data_list[0]) - 1)])
@@ -59,15 +27,36 @@ def save_data():
         writer.writerow(['Timestamp'] + [f'fNIRS_{i}' for i in range(len(fnirs_data_list[0]) - 1)])
         writer.writerows(fnirs_data_list)
 
+
+
+
+def start_triggers_recording():
+    from pylsl import StreamInlet, StreamInfo, resolve_streams
+    print("Resolving trigger stream...")
+
+    # Resolve the trigger stream - you can specify more precise parameters if needed
+    streams = resolve_streams()  
+    if len(streams) == 0:
+        raise RuntimeError("No trigger stream found")
+    inlet = StreamInlet(streams[0])
+
+
+    while True:
+        sample, timestamp = inlet.pull_sample()
+        print(f"Received trigger: {sample[0]} at time {timestamp}")
+        time.sleep(0.01)
+
+
 # Run everything
 try:
     # eeg_thread = threading.Thread(target=start_explore_eeg)
     # fnirs_thread = threading.Thread(target=start_fnirs_recording)
-    trigger_thread = threading.Thread(target=start_triggers_recording)
+    # trigger_thread = threading.Thread(target=start_triggers_recording)
 
     # eeg_thread.start()
     # fnirs_thread.start()
-    trigger_thread.start()
+    # trigger_thread.start()
+    start_triggers_recording()
 
     print("Recording... Press Ctrl+C to stop.")
     while True:
