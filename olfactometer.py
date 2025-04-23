@@ -4,7 +4,14 @@ class Olfactometer(OlfSerial):
         """
         Initialize the Olfactometer class
         """
-        super().__init__(port=port)
+        try:
+            super().__init__(port=port)
+        except: 
+            print("Could not connect to the Olfactometer. Continue without it? (y/n)")
+            response = input().lower()
+            if response != 'y':
+                raise Exception("Aborting due to connection failure")
+            self.use = False
         self.good_smell = aromas[0]
         self.bad_smell = aromas[1]
         self.use = use

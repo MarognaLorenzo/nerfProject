@@ -23,7 +23,7 @@ async def countdown(seconds):
 
 
 def main(h):
-    n_combinations = (h.n_concentrations * h.n_aromas) + 1
+    n_combinations = (h.n_concentrations * h.n_aromas) + 1    
     olfactometer = Olfactometer(aromas=h.aromas, boards = h.boards, port= h.port, use = h.use)
 
     for block in range(h.n_blocks):
