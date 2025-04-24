@@ -4,7 +4,7 @@ from Olfactometer import Olfactometer
 import sys
 import helpers
 import asyncio
-
+from Stream import Stream
 
 elapsed_time = 0
 
@@ -25,6 +25,9 @@ async def countdown(seconds):
 def main(h):
     n_combinations = (h.n_concentrations * h.n_aromas) + 1    
     olfactometer = Olfactometer(aromas=h.aromas, boards = h.boards, port= h.port, use = h.use)
+    lsl_stream = Stream(active=h.trigger)
+    print(h)
+    input("Press enter to continue once the recording script has started...")
 
     for block in range(h.n_blocks):
         print(f"Block {block}")
@@ -37,9 +40,11 @@ def main(h):
 
             # Odor exposure
             olfactometer.activate(aroma)
+            lsl_stream.send_marker(f"Activating aroma: {aroma}")
 
             wait_time(h.odor_exposure, f"odor exposure with aroma: {aroma}", h.sleep)
             olfactometer.deactivate(aroma)
+            lsl_stream.send_marker(f"Deactivate aroma: {aroma}")
 
             # Recovery time
             wait_time(h.recovery, "recovery", h.sleep)
@@ -54,6 +59,7 @@ def main(h):
         wait_time(h.after_block_rest, "end block")
 
     print(f"Total time: {elapsed_time/60} minutes")
+    input("Completed!")
 
 if __name__ == "__main__":
     assert len(sys.argv) > 1, "Please pass the configuration file to the script."

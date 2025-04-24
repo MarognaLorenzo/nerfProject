@@ -10,6 +10,7 @@ final_recovery_min : 0
 final_recovery_max : 1
 sleep : False
 use : False
+trigger : False # Send triggers to the LSL stream
 port : "/dev/tty.usbserial-FTWGRT8X"
 boards:
   - "0D02B024"

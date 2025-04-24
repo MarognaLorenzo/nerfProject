@@ -15,18 +15,20 @@ def start_fnirs_recording():
 
 # Save data to CSV
 def save_data():
-    eeg_data_list = []
-    fnirs_data_list = []
-    with open('eeg_data.csv', 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['Timestamp'] + [f'EEG_{i}' for i in range(len(eeg_data_list[0]) - 1)])
-        writer.writerows(eeg_data_list)
+    # with open('eeg_data.csv', 'w', newline='') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerow(['Timestamp'] + [f'EEG_{i}' for i in range(len(eeg_data_list[0]) - 1)])
+    #     writer.writerows(eeg_data_list)
 
-    with open('fnirs_data.csv', 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['Timestamp'] + [f'fNIRS_{i}' for i in range(len(fnirs_data_list[0]) - 1)])
-        writer.writerows(fnirs_data_list)
+    # with open('fnirs_data.csv', 'w', newline='') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerow(['Timestamp'] + [f'fNIRS_{i}' for i in range(len(fnirs_data_list[0]) - 1)])
+    #     writer.writerows(fnirs_data_list)
 
+    with open('triggers_data.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Timestamp'] + [f'trigger_{i}' for i in range(len(triggers_data[0]) - 1)])
+        writer.writerows(triggers_data)
 
 
 
@@ -44,11 +46,16 @@ def start_triggers_recording():
     while True:
         sample, timestamp = inlet.pull_sample()
         print(f"Received trigger: {sample[0]} at time {timestamp}")
+        triggers_data.append([timestamp] + sample)
         time.sleep(0.01)
 
 
 # Run everything
 try:
+    triggers_data = []  
+    eeg_data_list = []
+    fnirs_data_list = []
+
     # eeg_thread = threading.Thread(target=start_explore_eeg)
     # fnirs_thread = threading.Thread(target=start_fnirs_recording)
     trigger_thread = threading.Thread(target=start_triggers_recording)
@@ -61,6 +68,6 @@ try:
     while True:
         time.sleep(1)
 
-except KeyboardInterrupt:
+except:
     print("Stopping and saving...")
     save_data()
