@@ -40,3 +40,4 @@ ENV/
 ehthumbs.db
 Thumbs.db
 
+*.csv
