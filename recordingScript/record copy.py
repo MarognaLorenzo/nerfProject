@@ -51,12 +51,11 @@ def start_triggers_recording():
 try:
     # eeg_thread = threading.Thread(target=start_explore_eeg)
     # fnirs_thread = threading.Thread(target=start_fnirs_recording)
-    # trigger_thread = threading.Thread(target=start_triggers_recording)
+    trigger_thread = threading.Thread(target=start_triggers_recording)
 
     # eeg_thread.start()
     # fnirs_thread.start()
-    # trigger_thread.start()
-    start_triggers_recording()
+    trigger_thread.start()
 
     print("Recording... Press Ctrl+C to stop.")
     while True:
